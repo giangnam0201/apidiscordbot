@@ -2,3 +2,4 @@ streamlit
 discord.py
 aiohttp
 requests
+dotenv
