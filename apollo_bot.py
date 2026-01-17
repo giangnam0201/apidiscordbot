@@ -246,7 +246,7 @@ async def get_year_fact(year=None):
         return ('📅', data, f'Year Fact: {year}')
     return None
 
-async fun fact():
+async fun_fact():
     data = await fetch_json("https://api.api-ninjas.com/v1/facts?limit=1", headers={'X-Api-Key': 'DEMO_KEY'})
     if data and len(data) > 0:
         return ('✨', data[0]['fact'], 'Random Fact')
@@ -542,7 +542,7 @@ async def get_random_game():
     game = random.choice(games)
     return (game[0], f'🎯 **{game[1]}**\n\n{game[2]}', 'Random Game')
 
-async fun get_pc_building_tip():
+async fun_get_pc_building_tip():
     tips = [
         "Always install RAM in the correct slots (check your motherboard manual)!",
         "Apply thermal paste carefully - a pea-sized amount is usually enough.",
@@ -574,7 +574,7 @@ async def get_coffee_fact():
     fact = random.choice(facts)
     return ('☕', f'☕ **Coffee Fact**\n\n{fact}', 'Coffee Trivia')
 
-async fun food_joke():
+async fun_food_joke():
     jokes = [
         "Why did the tomato turn red? Because it saw the salad dressing!",
         "What do you call a fake noodle? An impasta!",
@@ -606,7 +606,7 @@ async def get_music_artist_fact():
 
 # ==================== HISTORY APIs ====================
 
-async fun history_fact():
+async fun_history_fact():
     facts = [
         "The Great Pyramid of Giza was built over a 20-year period, around 2560 BC.",
         "Cleopatra lived closer to the moon landing than to the construction of the pyramids.",
@@ -804,7 +804,7 @@ async def get_slap_picture():
         return ('👋', data['url'], 'Slap Image')
     return None
 
-async fun kill_picture():
+async fun_kill_picture():
     data = await fetch_json("https://waifu.pics/api/sfw/kill")
     if data and 'url' in data:
         return ('💀', data['url'], 'Kill Image')
@@ -891,7 +891,7 @@ async def get_math_fact(num=None):
         return ('🔢', f'**Math Fact #{num}**\n\n{data}', 'Math Trivia')
     return None
 
-# ==================== RANDOM FUNCTIONS ====================
+# ==================== RANDOM fun_CTIONS ====================
 
 async def get_birthday_fact(month, day):
     data = await fetch_json(f"http://numbersapi.com/{month}/{day}/date")
@@ -1880,7 +1880,7 @@ async def help_cmd(ctx):
         "🍳 Food": "recipe, foodjoke",
         "📰 News": "news, worldnews",
         "🎵 Music": "lyrics <artist> <song>",
-        "🔮 Fun": "horoscope <sign>, trivia, advice, activity",
+        "🔮 fun_": "horoscope <sign>, trivia, advice, activity",
         "😄 Memes": "meme, dankmeme, animeme, wholesome",
         "👘 Anime": "waifu, neko, hug, pat, kiss, cry, smug, blush, wave, nom, slap, cuddle, comfort",
         "💰 Utilities": "color, crypto <coin>, ping, avatar, serverinfo, userinfo",
