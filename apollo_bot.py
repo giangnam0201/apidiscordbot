@@ -246,11 +246,6 @@ async def get_year_fact(year=None):
         return ('📅', data, f'Year Fact: {year}')
     return None
 
-async fun_fact():
-    data = await fetch_json("https://api.api-ninjas.com/v1/facts?limit=1", headers={'X-Api-Key': 'DEMO_KEY'})
-    if data and len(data) > 0:
-        return ('✨', data[0]['fact'], 'Random Fact')
-    return None
 
 # ==================== JOKE APIs ====================
 
@@ -542,21 +537,6 @@ async def get_random_game():
     game = random.choice(games)
     return (game[0], f'🎯 **{game[1]}**\n\n{game[2]}', 'Random Game')
 
-async fun_get_pc_building_tip():
-    tips = [
-        "Always install RAM in the correct slots (check your motherboard manual)!",
-        "Apply thermal paste carefully - a pea-sized amount is usually enough.",
-        "Cable management improves airflow and looks cleaner.",
-        "Don't forget to install the I/O shield before putting in the motherboard!",
-        "Static electricity can damage components - use an anti-static wrist strap.",
-        "Make sure your PSU has enough wattage for your components.",
-        "Check compatibility between CPU socket and motherboard before buying.",
-        "Install M.2 SSDs before putting in the GPU for easier access.",
-        "Don't forget to connect the front panel connectors!",
-        "Update your BIOS before attempting to boot with new CPUs."
-    ]
-    tip = random.choice(tips)
-    return ('💻', f'🔧 **PC Building Tip**\n\n{tip}', 'Tech Tips')
 
 # ==================== COFFEE/FOOD APIs ====================
 
@@ -574,19 +554,6 @@ async def get_coffee_fact():
     fact = random.choice(facts)
     return ('☕', f'☕ **Coffee Fact**\n\n{fact}', 'Coffee Trivia')
 
-async fun_food_joke():
-    jokes = [
-        "Why did the tomato turn red? Because it saw the salad dressing!",
-        "What do you call a fake noodle? An impasta!",
-        "Why don't eggs tell jokes? They'd crack each other up!",
-        "What do you call a cheese that isn't yours? Nacho cheese!",
-        "Why did the scarecrow become a chef? He was outstanding in his field!",
-        "What kind of egg did the evil chicken lay? A deviled egg!",
-        "Why did the baker go to therapy? Because he had too many issues!",
-        "What do you call a bear with no teeth? A gummy bear!"
-    ]
-    joke = random.choice(jokes)
-    return ('🍕', f'😄 **Food Joke**\n\n{joke}', 'Food Humor')
 
 # ==================== MUSIC APIs ====================
 
@@ -606,21 +573,7 @@ async def get_music_artist_fact():
 
 # ==================== HISTORY APIs ====================
 
-async fun_history_fact():
-    facts = [
-        "The Great Pyramid of Giza was built over a 20-year period, around 2560 BC.",
-        "Cleopatra lived closer to the moon landing than to the construction of the pyramids.",
-        "Oxford University is older than the Aztec Empire.",
-        "The shortest war in history lasted only 38-45 minutes between Britain and Zanzibar in 1896.",
-        "Napoleon was once attacked by a horde of bunnies.",
-        "President Abraham Lincoln was also a licensed bartender.",
-        "The oldest known university is the University of Bologna, founded in 1088.",
-        "Queen Elizabeth I had the title 'Supreme Governor of the Church of England'.",
-        "The Maya civilization was already 2,000 years old when the Aztec Empire was founded.",
-        "Julius Caesar was stabbed 23 times and only one wound was fatal."
-    ]
-    fact = random.choice(facts)
-    return ('🏛️', f'📜 **History Fact**\n\n{fact}', 'Historical Trivia')
+
 
 # ==================== GAMING APIs ====================
 
@@ -804,11 +757,6 @@ async def get_slap_picture():
         return ('👋', data['url'], 'Slap Image')
     return None
 
-async fun_kill_picture():
-    data = await fetch_json("https://waifu.pics/api/sfw/kill")
-    if data and 'url' in data:
-        return ('💀', data['url'], 'Kill Image')
-    return None
 
 async def get_comfort_picture():
     data = await fetch_json("https://waifu.pics/api/sfw/comfort")
@@ -1880,7 +1828,7 @@ async def help_cmd(ctx):
         "🍳 Food": "recipe, foodjoke",
         "📰 News": "news, worldnews",
         "🎵 Music": "lyrics <artist> <song>",
-        "🔮 fun_": "horoscope <sign>, trivia, advice, activity",
+        "🔮 fun": "horoscope <sign>, trivia, advice, activity",
         "😄 Memes": "meme, dankmeme, animeme, wholesome",
         "👘 Anime": "waifu, neko, hug, pat, kiss, cry, smug, blush, wave, nom, slap, cuddle, comfort",
         "💰 Utilities": "color, crypto <coin>, ping, avatar, serverinfo, userinfo",
