@@ -42,7 +42,6 @@ def check_requirements():
         return False
 
 def check_token():
-    """Check if bot token is set"""
     token = os.environ.get('DISCORD_BOT_TOKEN', '')
     if token and token != 'YOUR_BOT_TOKEN_HERE':
         print("✅ Bot token found in environment variables!")
