@@ -1,50 +1,45 @@
 from aiohttp import web
 import os
-import asyncio
 import time
 import logging
+import threading
 import platform
-import psutil
 
-# ---------------- CONFIG ----------------
+# Optional dependency
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
+APP_NAME = "API Discord Bot"
 START_TIME = time.time()
-APP_NAME = "Discord API Master Bot"
+PID = os.getpid()
 
 logging.basicConfig(
     level=logging.INFO,
     format="🌐 [WEB] %(asctime)s | %(levelname)s | %(message)s",
 )
 
-# Optional: attach bot later
-BOT = None
-
-def attach_bot(bot):
-    global BOT
-    BOT = bot
-
 
 # ---------------- HELPERS ----------------
 def uptime():
-    seconds = int(time.time() - START_TIME)
-    mins, sec = divmod(seconds, 60)
-    hrs, mins = divmod(mins, 60)
-    days, hrs = divmod(hrs, 24)
-    return f"{days}d {hrs}h {mins}m {sec}s"
+    secs = int(time.time() - START_TIME)
+    m, s = divmod(secs, 60)
+    h, m = divmod(m, 60)
+    d, h = divmod(h, 24)
+    return f"{d}d {h}h {m}m {s}s"
 
 
-def system_stats():
-    return {
-        "cpu_percent": psutil.cpu_percent(),
-        "memory_percent": psutil.virtual_memory().percent,
-        "python": platform.python_version(),
-        "platform": platform.system(),
-    }
+def memory_usage():
+    if not psutil:
+        return None
+    return round(psutil.Process(PID).memory_info().rss / 1024 / 1024, 2)
 
 
 # ---------------- ROUTES ----------------
 async def home(request):
     return web.Response(
-        text=f"✅ {APP_NAME} is running.\nUptime: {uptime()}",
+        text=f"✅ {APP_NAME} running\nUptime: {uptime()}",
         content_type="text/plain",
     )
 
@@ -56,49 +51,43 @@ async def health(request):
     })
 
 
-async def ping(request):
-    start = time.perf_counter()
-    await asyncio.sleep(0)
-    latency = round((time.perf_counter() - start) * 1000, 2)
-    return web.json_response({"ping_ms": latency})
-
-
 async def stats(request):
     data = {
         "app": APP_NAME,
         "uptime": uptime(),
-        "system": system_stats(),
+        "pid": PID,
+        "python": platform.python_version(),
+        "platform": platform.system(),
     }
 
-    if BOT:
-        data["discord"] = {
-            "guilds": len(BOT.guilds),
-            "users": sum(g.member_count or 0 for g in BOT.guilds),
-            "latency_ms": round(BOT.latency * 1000, 2),
-        }
+    mem = memory_usage()
+    if mem:
+        data["memory_mb"] = mem
 
     return web.json_response(data)
 
 
 # ---------------- SERVER ----------------
-async def start_webserver():
+def run_server():
     app = web.Application()
     app.add_routes([
         web.get("/", home),
         web.get("/health", health),
-        web.get("/ping", ping),
         web.get("/stats", stats),
     ])
 
-    runner = web.AppRunner(app)
-    await runner.setup()
-
     port = int(os.environ.get("PORT", 10000))
-    site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
+    logging.info(f"Web server starting on 0.0.0.0:{port}")
 
-    logging.info(f"Server running on 0.0.0.0:{port}")
+    web.run_app(
+        app,
+        host="0.0.0.0",
+        port=port,
+        print=None,     # disable aiohttp banner
+        access_log=None # silence noisy logs
+    )
 
-    # Keep alive forever
-    while True:
-        await asyncio.sleep(3600)
+
+def keep_alive():
+    t = threading.Thread(target=run_server, daemon=True)
+    t.start()
