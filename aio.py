@@ -5,15 +5,16 @@ import logging
 import threading
 import platform
 
-# Optional dependency
 try:
     import psutil
 except ImportError:
     psutil = None
 
+
 APP_NAME = "API Discord Bot"
 START_TIME = time.time()
 PID = os.getpid()
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,33 +22,32 @@ logging.basicConfig(
 )
 
 
-# ---------------- HELPERS ----------------
+# ---------- HELPERS ----------
 def uptime():
-    secs = int(time.time() - START_TIME)
-    m, s = divmod(secs, 60)
-    h, m = divmod(m, 60)
-    d, h = divmod(h, 24)
-    return f"{d}d {h}h {m}m {s}s"
+    seconds = int(time.time() - START_TIME)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    return f"{days}d {hours}h {minutes}m {seconds}s"
 
 
-def memory_usage():
+def memory_mb():
     if not psutil:
         return None
     return round(psutil.Process(PID).memory_info().rss / 1024 / 1024, 2)
 
 
-# ---------------- ROUTES ----------------
+# ---------- ROUTES ----------
 async def home(request):
     return web.Response(
-        text=f"✅ {APP_NAME} running\nUptime: {uptime()}",
-        content_type="text/plain",
+        text=f"✅ {APP_NAME} running\nUptime: {uptime()}"
     )
 
 
 async def health(request):
     return web.json_response({
         "status": "ok",
-        "uptime": uptime(),
+        "uptime": uptime()
     })
 
 
@@ -55,19 +55,19 @@ async def stats(request):
     data = {
         "app": APP_NAME,
         "uptime": uptime(),
-        "pid": PID,
         "python": platform.python_version(),
         "platform": platform.system(),
+        "pid": PID,
     }
 
-    mem = memory_usage()
-    if mem:
+    mem = memory_mb()
+    if mem is not None:
         data["memory_mb"] = mem
 
     return web.json_response(data)
 
 
-# ---------------- SERVER ----------------
+# ---------- SERVER ----------
 def run_server():
     app = web.Application()
     app.add_routes([
@@ -79,17 +79,19 @@ def run_server():
     port = int(os.environ.get("PORT", 10000))
     logging.info(f"Web server starting on 0.0.0.0:{port}")
 
-   web.run_app(
-       app,
-       host="0.0.0.0",
-       port=port,
-       print=None,
-       access_log=None,
-       handle_signals=False   # 🔥 REQUIRED when running in a thread
-   )
-
+    web.run_app(
+        app,
+        host="0.0.0.0",
+        port=port,
+        access_log=None,
+        print=None,
+        handle_signals=False
+    )
 
 
 def keep_alive():
-    t = threading.Thread(target=run_server, daemon=True)
-    t.start()
+    thread = threading.Thread(
+        target=run_server,
+        daemon=True
+    )
+    thread.start()
