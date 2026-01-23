@@ -79,13 +79,15 @@ def run_server():
     port = int(os.environ.get("PORT", 10000))
     logging.info(f"Web server starting on 0.0.0.0:{port}")
 
-    web.run_app(
-        app,
-        host="0.0.0.0",
-        port=port,
-        print=None,     # disable aiohttp banner
-        access_log=None # silence noisy logs
-    )
+   web.run_app(
+       app,
+       host="0.0.0.0",
+       port=port,
+       print=None,
+       access_log=None,
+       handle_signals=False   # 🔥 REQUIRED when running in a thread
+   )
+
 
 
 def keep_alive():
