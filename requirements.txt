@@ -1,4 +1,5 @@
 flask
+psutil
 discord.py
 aiohttp
 requests
