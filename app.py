@@ -147,5 +147,5 @@ async def help(ctx):
         embed.add_field(name=f"📂 {cat_name}", value=value_text, inline=False)
 
     await ctx.send(embed=embed)
-asyncio.get_event_loop().create_task(start_webserver())
+
 bot.run(TOKEN)
