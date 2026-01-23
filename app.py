@@ -9,6 +9,10 @@ from aio import start_webserver
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        # This runs AFTER the event loop exists
+        self.loop.create_task(start_webserver())
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -124,7 +128,7 @@ async def help(ctx):
     Commands with `[input]` require you to type something after them."""
     
     embed = discord.Embed(
-        title="👑 100+ API Master Bot",
+        title="👑 50 API Master Bot",
         description=help_desc,
         color=0x2ecc71
     )
