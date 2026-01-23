@@ -5,13 +5,13 @@ import random
 from discord.ext import commands
 from dotenv import load_dotenv
 import asyncio
-from aio import start_webserver
+from aio import start_webserver, attach_bot
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 class MyBot(commands.Bot):
     async def setup_hook(self):
-        # This runs AFTER the event loop exists
+        attach_bot(self)
         self.loop.create_task(start_webserver())
 
 intents = discord.Intents.default()
